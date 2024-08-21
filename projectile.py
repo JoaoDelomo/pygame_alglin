@@ -17,7 +17,7 @@ class Projectile:
 
         # Carregar o sprite do projétil
         self.sprite = pygame.image.load("images/jaca.png").convert_alpha()
-        self.sprite = pygame.transform.scale(self.sprite, (100, 100))  # Ajuste o tamanho conforme necessário
+        self.sprite = pygame.transform.scale(self.sprite, (self.size, self.size))  # Ajuste o tamanho conforme necessário
 
     def calculate_velocity(self):
         self.velocity = [

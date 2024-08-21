@@ -9,6 +9,14 @@ class Portal:
         self.exit_placed = False  # Indicador se o portal de saída foi colocado
         self.cooldown = 0  # Tempo de cooldown para evitar teletransporte repetido
 
+        # Carregar as imagens dos portais
+        self.entry_image = pygame.image.load('images/portal_azul.png')
+        self.exit_image = pygame.image.load('images/portal_laranja.png')
+
+        # Ajustar o tamanho das imagens para corresponder ao raio definido
+        self.entry_image = pygame.transform.scale(self.entry_image, (self.radius * 2, self.radius * 2))
+        self.exit_image = pygame.transform.scale(self.exit_image, (self.radius * 2, self.radius * 2))
+
     def set_entry(self, pos):
         """Define a posição do portal de entrada se ele ainda não foi colocado."""
         if not self.entry_placed:
@@ -24,9 +32,11 @@ class Portal:
     def draw(self, screen):
         """Desenha os portais na tela."""
         if self.entry_pos:
-            pygame.draw.circle(screen, (0, 0, 255), self.entry_pos, self.radius)  # Azul para a entrada
+            # Desenha o portal de entrada (azul)
+            screen.blit(self.entry_image, (self.entry_pos[0] - self.radius, self.entry_pos[1] - self.radius))
         if self.exit_pos:
-            pygame.draw.circle(screen, (255, 165, 0), self.exit_pos, self.radius)  # Laranja para a saída
+            # Desenha o portal de saída (laranja)
+            screen.blit(self.exit_image, (self.exit_pos[0] - self.radius, self.exit_pos[1] - self.radius))
 
     def teleport(self, projectile):
         """Teletransporta o projétil entre os portais."""

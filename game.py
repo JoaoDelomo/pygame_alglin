@@ -1,15 +1,15 @@
 import pygame
-import json
+import math
 from button import CloseButton
 from projectile import Projectile
 from obstacle import Obstacle
 from gravity_center import GravityCenter
 from portal import Portal
 from goal import Goal
-import math
 
 class Game:
     def __init__(self):
+        pygame.init()
         self.screen_info = pygame.display.Info()
         self.width = self.screen_info.current_w
         self.height = self.screen_info.current_h
@@ -17,11 +17,11 @@ class Game:
         self.close_button = CloseButton(self.screen, self.width, self.height)
 
         # Carregar a imagem do background
-        self.background = pygame.image.load("images/background.jpg").convert()
+        self.background = pygame.image.load("images/background.png").convert()
         self.background = pygame.transform.scale(self.background, (self.width, self.height))
 
         # Limite de projéteis
-        self.max_projectiles = 5
+        self.max_projectiles = 10
         self.projectiles_remaining = self.max_projectiles
 
         self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
@@ -32,14 +32,15 @@ class Game:
         ]
 
         self.gravity_center = GravityCenter((self.width // 2, self.height // 2), strength=500, influence_radius=100)
-
         self.portal = Portal()
-
-        self.goal = Goal((700, 100))  # Posição do objetivo
+        self.goal = Goal((700, 100))
 
         self.running = True
         self.dragging = False
-        self.portal_mode = 'entry'  # Primeiro clique define a entrada
+        self.portal_mode = 'entry'
+
+        # Estados do jogo
+        self.state = "start"
 
     def run(self):
         while self.running:
@@ -52,11 +53,26 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.KEYDOWN:
+                if self.state == "start":
+                    if event.key == pygame.K_RETURN:
+                        self.state = "instructions"
+                elif self.state == "instructions":
+                    if event.key == pygame.K_RETURN:
+                        self.state = "playing"
+                elif self.state == "game_over":
+                    if event.key == pygame.K_RETURN:
+                        self.reset_game()
+                        self.state = "start"
+                elif self.state == "playing":
+                    if event.key == pygame.K_SPACE:
+                        self.place_portal(pygame.mouse.get_pos())
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.close_button.is_clicked(event.pos):
                     self.running = False
-                elif not self.projectile.launched and not self.dragging and self.projectiles_remaining > 0:
-                    self.dragging = True
+                elif self.state == "playing":
+                    if not self.projectile.launched and not self.dragging and self.projectiles_remaining > 0:
+                        self.dragging = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
                     self.dragging = False
@@ -65,9 +81,6 @@ class Game:
                         self.projectiles_remaining -= 1
             elif event.type == pygame.MOUSEMOTION and self.dragging:
                 self.calculate_power_and_angle(event.pos)
-            elif event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    self.place_portal(pygame.mouse.get_pos())  # Coloca o portal na posição do mouse
 
     def calculate_power_and_angle(self, mouse_pos):
         dx = mouse_pos[0] - self.projectile.initial_pos[0]
@@ -77,54 +90,100 @@ class Game:
         self.projectile.calculate_velocity()
 
     def update(self):
-        if self.projectile.launched:
-            self.gravity_center.apply_gravity(self.projectile)
-            self.portal.teleport(self.projectile)
-            self.projectile.update()
-            self.check_collisions()
+        if self.state == "playing":
+            if self.projectile.launched:
+                self.gravity_center.apply_gravity(self.projectile)
+                self.portal.teleport(self.projectile)
+                self.projectile.update()
+                self.check_collisions()
 
-            # Verificar se o projétil atingiu o objetivo
-            if self.goal.check_collision(self.projectile):
-                print("Objetivo alcançado!")
-                self.running = False
+                if self.goal.check_collision(self.projectile):
+                    print("Objetivo alcançado!")
+                    self.state = "game_over"
 
     def draw(self):
-        # Desenhar o background
-        self.screen.blit(self.background, (0, 0))
+        if self.state == "start":
+            self.draw_start_screen()
+        elif self.state == "instructions":
+            self.draw_instructions_screen()
+        elif self.state == "playing":
+            self.draw_game_screen()
+        elif self.state == "game_over":
+            self.draw_game_over_screen()
 
         self.close_button.draw()
+
+    def draw_start_screen(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 74)
+        text = font.render("Pressione Enter para Iniciar", True, (255, 255, 255))
+        self.screen.blit(text, (self.width // 2 - text.get_width() // 2, self.height // 2 - text.get_height() // 2))
+
+    def draw_instructions_screen(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 48)
+        instructions = [
+            "Instruções:",
+            "1. Use o mouse para mirar e definir a força.",
+            "2. Pressione espaço para colocar um portal.",
+            "3. Alcance o quadrado verde para ganhar.",
+            "Pressione Enter para começar!"
+        ]
+        for i, line in enumerate(instructions):
+            text = font.render(line, True, (255, 255, 255))
+            self.screen.blit(text, (self.width // 2 - text.get_width() // 2, 200 + i * 50))
+
+    def draw_game_screen(self):
+        self.screen.blit(self.background, (0, 0))
         for obstacle in self.obstacles:
             obstacle.draw(self.screen)
         self.gravity_center.draw(self.screen)
         self.portal.draw(self.screen)
-        self.goal.draw(self.screen)  # Desenhar o objetivo
+        self.goal.draw(self.screen)
         if not self.projectile.launched:
             self.projectile.draw_trajectory(self.screen)
         self.projectile.draw(self.screen)
 
         # Desenhar contador de projéteis restantes
         font = pygame.font.SysFont(None, 36)
-        text = font.render(f"Projéteis restantes: {self.projectiles_remaining}", True, (255, 255, 255))
+        text = font.render(f"Vidas restantes: {self.projectiles_remaining}", True, (255, 255, 255))
         self.screen.blit(text, (10, 10))
+
+    def draw_game_over_screen(self):
+        self.screen.fill((0, 0, 0))
+        font = pygame.font.SysFont(None, 74)
+        text = font.render("Você venceu!", True, (0, 255, 0))
+        self.screen.blit(text, (self.width // 2 - text.get_width() // 2, self.height // 2 - text.get_height() // 2))
+        text = font.render("Pressione Enter para reiniciar", True, (255, 255, 255))
+        self.screen.blit(text, (self.width // 2 - text.get_width() // 2, self.height // 2 + text.get_height()))
 
     def check_collisions(self):
         obstacles_to_remove = []
-        
         for obstacle in self.obstacles:
             if self.projectile.check_collision(obstacle):
                 if obstacle.hit():
                     obstacles_to_remove.append(obstacle)
                 self.projectile.reset()
                 break
-
         for obstacle in obstacles_to_remove:
             self.obstacles.remove(obstacle)
 
     def place_portal(self, pos):
-        """Posiciona os portais de entrada e saída uma vez."""
         if self.portal_mode == 'entry' and not self.portal.entry_placed:
             self.portal.set_entry(pos)
             self.portal_mode = 'exit'
         elif self.portal_mode == 'exit' and not self.portal.exit_placed:
             self.portal.set_exit(pos)
-            self.portal_mode = 'none'  # Depois de colocar ambos os portais, desativa a colocação
+            self.portal_mode = 'none'
+
+    def reset_game(self):
+        """Reseta o estado do jogo para recomeçar."""
+        self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
+        self.portal = Portal()
+        self.portal_mode = 'entry'
+        self.goal = Goal((700, 100))
+        self.obstacles = [
+            Obstacle((self.width // 2, self.height - 150), (100, 50)),
+            Obstacle((self.width // 2 + 120, self.height - 200), (100, 50))
+        ]
+        self.projectiles_remaining = self.max_projectiles
