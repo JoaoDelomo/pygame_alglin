@@ -16,7 +16,15 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.NOFRAME)
         self.close_button = CloseButton(self.screen, self.width, self.height)
 
-        self.projectile = Projectile((50, self.height - 50), self.width, self.height)
+        # Carregar a imagem do background
+        self.background = pygame.image.load("images/background.jpg").convert()
+        self.background = pygame.transform.scale(self.background, (self.width, self.height))
+
+        # Limite de projéteis
+        self.max_projectiles = 5
+        self.projectiles_remaining = self.max_projectiles
+
+        self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
 
         self.obstacles = [
             Obstacle((self.width // 2, self.height - 150), (100, 50)),
@@ -47,12 +55,14 @@ class Game:
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if self.close_button.is_clicked(event.pos):
                     self.running = False
-                elif not self.projectile.launched and not self.dragging:
+                elif not self.projectile.launched and not self.dragging and self.projectiles_remaining > 0:
                     self.dragging = True
             elif event.type == pygame.MOUSEBUTTONUP:
                 if self.dragging:
                     self.dragging = False
-                    self.projectile.launch()
+                    if self.projectiles_remaining > 0:
+                        self.projectile.launch()
+                        self.projectiles_remaining -= 1
             elif event.type == pygame.MOUSEMOTION and self.dragging:
                 self.calculate_power_and_angle(event.pos)
             elif event.type == pygame.KEYDOWN:
@@ -79,7 +89,9 @@ class Game:
                 self.running = False
 
     def draw(self):
-        self.screen.fill((0, 0, 0))
+        # Desenhar o background
+        self.screen.blit(self.background, (0, 0))
+
         self.close_button.draw()
         for obstacle in self.obstacles:
             obstacle.draw(self.screen)
@@ -89,6 +101,11 @@ class Game:
         if not self.projectile.launched:
             self.projectile.draw_trajectory(self.screen)
         self.projectile.draw(self.screen)
+
+        # Desenhar contador de projéteis restantes
+        font = pygame.font.SysFont(None, 36)
+        text = font.render(f"Projéteis restantes: {self.projectiles_remaining}", True, (255, 255, 255))
+        self.screen.blit(text, (10, 10))
 
     def check_collisions(self):
         obstacles_to_remove = []

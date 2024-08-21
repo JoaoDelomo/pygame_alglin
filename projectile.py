@@ -2,7 +2,7 @@ import pygame
 import math
 
 class Projectile:
-    def __init__(self, pos, screen_width, screen_height):
+    def __init__(self, pos, screen_width, screen_height, size=50):
         self.initial_pos = list(pos)
         self.pos = list(pos)
         self.angle = 0
@@ -10,9 +10,14 @@ class Projectile:
         self.velocity = [0, 0]
         self.gravity = 2
         self.launched = False
-        self.slowdown_factor = 0.05 # Fator para desacelerar o movimento
+        self.slowdown_factor = 0.05  # Fator para desacelerar o movimento
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.size = size  # Novo tamanho do projétil
+
+        # Carregar o sprite do projétil
+        self.sprite = pygame.image.load("images/jaca.png").convert_alpha()
+        self.sprite = pygame.transform.scale(self.sprite, (100, 100))  # Ajuste o tamanho conforme necessário
 
     def calculate_velocity(self):
         self.velocity = [
@@ -33,7 +38,9 @@ class Projectile:
                 self.reset()
 
     def draw(self, screen):
-        pygame.draw.circle(screen, (0, 0, 255), (int(self.pos[0]), int(self.pos[1])), 10)
+        # Desenhar o sprite na posição do projétil
+        sprite_rect = self.sprite.get_rect(center=(int(self.pos[0]), int(self.pos[1])))
+        screen.blit(self.sprite, sprite_rect)
 
     def reset(self):
         self.pos = list(self.initial_pos)
