@@ -1,11 +1,11 @@
 import pygame
 import math
-from button import CloseButton
-from projectile import Projectile
-from obstacle import Obstacle
-from gravity_center import GravityCenter
-from portal import Portal
-from goal import Goal
+from meu_jogo.button import CloseButton
+from meu_jogo.projectile import Projectile
+from meu_jogo.obstacle import Obstacle
+from meu_jogo.gravity_center import GravityCenter
+from meu_jogo.portal import Portal
+from meu_jogo.goal import Goal
 
 class Game:
     def __init__(self):
@@ -25,12 +25,6 @@ class Game:
         self.projectiles_remaining = self.max_projectiles
 
         self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
-
-        self.obstacles = [
-            Obstacle((self.width // 2, self.height - 150), (100, 50)),
-            Obstacle((self.width // 2 + 120, self.height - 200), (100, 50))
-        ]
-
         self.gravity_center = GravityCenter((self.width // 2, self.height // 2), strength=500, influence_radius=100)
         self.portal = Portal()
         self.goal = Goal((700, 100))
@@ -41,6 +35,26 @@ class Game:
 
         # Estados do jogo
         self.state = "start"
+
+        # Variáveis para o sistema de fases
+        self.current_level = 0  # Inicia na primeira fase
+        self.levels = [
+            [Obstacle((self.width // 2, self.height - 150), (100, 50)),
+             Obstacle((self.width // 2 + 120, self.height - 200), (100, 50))],
+            [Obstacle((self.width // 3, self.height - 150), (150, 50)),
+             Obstacle((self.width // 3 * 2, self.height - 200), (150, 50))],
+            [Obstacle((self.width // 4, self.height - 150), (120, 50)),
+             Obstacle((self.width // 2, self.height - 250), (120, 50)),
+             Obstacle((self.width // 4 * 3, self.height - 350), (120, 50))],
+            [Obstacle((self.width // 5, self.height - 100), (90, 50)),
+             Obstacle((self.width // 5 * 2, self.height - 150), (90, 50)),
+             Obstacle((self.width // 5 * 3, self.height - 200), (90, 50)),
+             Obstacle((self.width // 5 * 4, self.height - 250), (90, 50))],
+            [Obstacle((self.width // 2 - 200, self.height - 150), (150, 50)),
+             Obstacle((self.width // 2, self.height - 300), (150, 50)),
+             Obstacle((self.width // 2 + 200, self.height - 450), (150, 50))]
+        ]
+        self.obstacles = self.levels[self.current_level]
 
     def run(self):
         while self.running:
@@ -99,7 +113,7 @@ class Game:
 
                 if self.goal.check_collision(self.projectile):
                     print("Objetivo alcançado!")
-                    self.state = "game_over"
+                    self.next_level()
 
     def draw(self):
         if self.state == "start":
@@ -176,14 +190,19 @@ class Game:
             self.portal.set_exit(pos)
             self.portal_mode = 'none'
 
+    def next_level(self):
+        """Avança para a próxima fase ou termina o jogo."""
+        self.current_level += 1
+        if self.current_level < len(self.levels):
+            self.reset_game()
+        else:
+            self.state = "game_over"
+
     def reset_game(self):
-        """Reseta o estado do jogo para recomeçar."""
+        """Reseta o estado do jogo para recomeçar ou avançar para a próxima fase."""
         self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
         self.portal = Portal()
         self.portal_mode = 'entry'
         self.goal = Goal((700, 100))
-        self.obstacles = [
-            Obstacle((self.width // 2, self.height - 150), (100, 50)),
-            Obstacle((self.width // 2 + 120, self.height - 200), (100, 50))
-        ]
+        self.obstacles = self.levels[self.current_level]  # Carregar obstáculos para a fase atual
         self.projectiles_remaining = self.max_projectiles

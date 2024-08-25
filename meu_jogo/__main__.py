@@ -1,6 +1,7 @@
+# meu_jogo/__main__.py
 import pygame
 import sys
-from game import Game
+from meu_jogo.game import Game
 
 def main():
     pygame.init()
