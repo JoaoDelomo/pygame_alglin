@@ -1,0 +1,45 @@
+Metadata-Version: 2.1
+Name: meu-jogo
+Version: 0.1
+Summary: Jaca Wars em pygame.
+Home-page: https://github.com/JoaoDelomo/pygame_alglin
+Author: Carlos Hernani e João Delomo
+Author-email: joaogrd@al.insper.edu.br, carloshcdpg@al.insper.edu.br
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.11.4
+Description-Content-Type: text/markdown
+
+# Jaca Wars
+
+TranscriÃ§Ã£o do clÃ¡ssico jaca wars para pygame.
+Grupo:
+Carlos Hernani Cardoso
+JoÃ£o Gabriel Delomo
+
+## InstalaÃ§Ã£o
+
+Certifique-se de ter o Python instalado em sua mÃ¡quina. Recomendamos o Python 3.7 ou superior.
+
+1. Clone o repositÃ³rio:
+
+```bash
+git clone https://github.com/JoaoDelomo/pygame_alglin.git
+cd meu_jogo
+
+
+2. Instale as dependÃªncias:
+
+pip install -r requirements.txt
+
+
+3. Execute o jogo:
+
+python -m meu_jogo
+
+##Como Jogar
+Use o mouse para mirar e definir a forÃ§a.
+Pressione EspaÃ§o para colocar um portal.
+Alcance o quadrado verde para ganhar.
+Pressione Enter para iniciar ou avanÃ§ar nos menus.

@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 
 class Projectile:
     def __init__(self, pos, screen_width, screen_height, size=50):
@@ -16,8 +17,9 @@ class Projectile:
         self.size = size  # Novo tamanho do projétil
 
         # Carregar o sprite do projétil
-        self.sprite = pygame.image.load("images/jaca.png").convert_alpha()
-        self.sprite = pygame.transform.scale(self.sprite, (self.size, self.size))  # Ajuste o tamanho conforme necessário
+        projetil_caminho = os.path.join(os.path.dirname(__file__), 'images/jaca.png')
+        self.sprite = pygame.image.load(projetil_caminho).convert_alpha()
+        self.sprite = pygame.transform.scale(self.sprite, (self.size, self.size)) # Ajuste o tamanho conforme necessário
 
     def calculate_velocity(self):
         self.velocity = [
