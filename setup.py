@@ -5,8 +5,8 @@ setup(
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[
-        'pygame>=2.5.2',
+    install_requires=[  # Instala as dependências especificadas no requirements.txt
+        line.strip() for line in open("requirements.txt").readlines()
     ],
     entry_points={
         'console_scripts': [

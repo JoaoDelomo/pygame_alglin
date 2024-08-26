@@ -1,5 +1,6 @@
 import pygame
 import math
+import os
 from meu_jogo.button import CloseButton
 from meu_jogo.projectile import Projectile
 from meu_jogo.obstacle import Obstacle
@@ -16,8 +17,9 @@ class Game:
         self.screen = pygame.display.set_mode((self.width, self.height), pygame.NOFRAME)
         self.close_button = CloseButton(self.screen, self.width, self.height)
 
-        # Carregar a imagem do background
-        self.background = pygame.image.load("images/background.png").convert()
+        # Carregar a imagem do background com caminho correto
+        caminho = os.path.join(os.path.dirname(__file__), 'images', 'background.png')
+        self.background = pygame.image.load(caminho).convert()
         self.background = pygame.transform.scale(self.background, (self.width, self.height))
 
         # Limite de projéteis
@@ -41,6 +43,7 @@ class Game:
             Obstacle((self.width // 3, self.height - 150), (100, 50)),  # Obstáculo antes do centro gravitacional
             Obstacle((self.width // 3 * 2, self.height - 200), (100, 50))  # Obstáculo depois do centro gravitacional
         ]
+
 
     def run(self):
         while self.running:
