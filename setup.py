@@ -13,6 +13,9 @@ setup(
             'meu_jogo=meu_jogo.__main__:main'
         ]
     },
+    package_data={
+        'meu_jogo': ['images/*.png',]
+        },
     author='Carlos Hernani e João Delomo',
     author_email='joaogrd@al.insper.edu.br, carloshcdpg@al.insper.edu.br',
     description='Jaca Wars em pygame.',
