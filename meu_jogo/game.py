@@ -27,34 +27,20 @@ class Game:
         self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
         self.gravity_center = GravityCenter((self.width // 2, self.height // 2), strength=500, influence_radius=100)
         self.portal = Portal()
-        self.goal = Goal((700, 100))
+        self.goal = Goal((1250, 500))
 
         self.running = True
         self.dragging = False
         self.portal_mode = 'entry'
 
-        # Estados do jogo
+        # Estado do jogo
         self.state = "start"
 
-        # Variáveis para o sistema de fases
-        self.current_level = 0  # Inicia na primeira fase
-        self.levels = [
-            [Obstacle((self.width // 2, self.height - 150), (100, 50)),
-             Obstacle((self.width // 2 + 120, self.height - 200), (100, 50))],
-            [Obstacle((self.width // 3, self.height - 150), (150, 50)),
-             Obstacle((self.width // 3 * 2, self.height - 200), (150, 50))],
-            [Obstacle((self.width // 4, self.height - 150), (120, 50)),
-             Obstacle((self.width // 2, self.height - 250), (120, 50)),
-             Obstacle((self.width // 4 * 3, self.height - 350), (120, 50))],
-            [Obstacle((self.width // 5, self.height - 100), (90, 50)),
-             Obstacle((self.width // 5 * 2, self.height - 150), (90, 50)),
-             Obstacle((self.width // 5 * 3, self.height - 200), (90, 50)),
-             Obstacle((self.width // 5 * 4, self.height - 250), (90, 50))],
-            [Obstacle((self.width // 2 - 200, self.height - 150), (150, 50)),
-             Obstacle((self.width // 2, self.height - 300), (150, 50)),
-             Obstacle((self.width // 2 + 200, self.height - 450), (150, 50))]
+        # Única fase com obstáculos antes e depois do centro gravitacional
+        self.obstacles = [
+            Obstacle((self.width // 3, self.height - 150), (100, 50)),  # Obstáculo antes do centro gravitacional
+            Obstacle((self.width // 3 * 2, self.height - 200), (100, 50))  # Obstáculo depois do centro gravitacional
         ]
-        self.obstacles = self.levels[self.current_level]
 
     def run(self):
         while self.running:
@@ -92,7 +78,6 @@ class Game:
                     self.dragging = False
                     if self.projectiles_remaining > 0:
                         self.projectile.launch()
-                        self.projectiles_remaining -= 1
             elif event.type == pygame.MOUSEMOTION and self.dragging:
                 self.calculate_power_and_angle(event.pos)
 
@@ -105,15 +90,19 @@ class Game:
 
     def update(self):
         if self.state == "playing":
+            # Atualizar a posição dos obstáculos
+            for obstacle in self.obstacles:
+                obstacle.move(self.screen)  # Passar a tela como argumento
             if self.projectile.launched:
                 self.gravity_center.apply_gravity(self.projectile)
                 self.portal.teleport(self.projectile)
                 self.projectile.update()
                 self.check_collisions()
+                self.check_wall_collisions()  # Verificar colisões com as paredes
 
                 if self.goal.check_collision(self.projectile):
                     print("Objetivo alcançado!")
-                    self.next_level()
+                    self.state = "game_over"
 
     def draw(self):
         if self.state == "start":
@@ -140,7 +129,9 @@ class Game:
             "Instruções:",
             "1. Use o mouse para mirar e definir a força.",
             "2. Pressione espaço para colocar um portal.",
-            "3. Alcance o quadrado verde para ganhar.",
+            "3. Cuidado com os obstáculos!",
+            "4. Você não pode colocar portais depois do centro gravitacional",
+            "5. Alcance a casa do vizinho para ganhar.",
             "Pressione Enter para começar!"
         ]
         for i, line in enumerate(instructions):
@@ -178,11 +169,28 @@ class Game:
                 if obstacle.hit():
                     obstacles_to_remove.append(obstacle)
                 self.projectile.reset()
+                self.reset_portals()  # Reinicia os portais quando o projétil colide com um obstáculo
                 break
         for obstacle in obstacles_to_remove:
             self.obstacles.remove(obstacle)
 
+    def check_wall_collisions(self):
+        """Verifica colisões com as bordas da tela."""
+        if (self.projectile.pos[0] - self.projectile.size <= 0 or 
+            self.projectile.pos[0] + self.projectile.size >= self.width or
+            self.projectile.pos[1] - self.projectile.size <= 0 or 
+            self.projectile.pos[1] + self.projectile.size >= self.height):
+            # Colidiu com a parede, resetar projétil e portais
+            self.projectile.reset()
+            self.reset_portals()
+            self.projectiles_remaining -= 1
+            print("Projétil colidiu com a parede. Resetando portais.")
+
     def place_portal(self, pos):
+        if pos[0] > self.gravity_center.pos[0] +100:  # Verifica se a posição é depois do centro gravitacional
+            print("Portais não podem ser colocados depois do campo gravitacional.")
+            return
+        
         if self.portal_mode == 'entry' and not self.portal.entry_placed:
             self.portal.set_entry(pos)
             self.portal_mode = 'exit'
@@ -190,19 +198,15 @@ class Game:
             self.portal.set_exit(pos)
             self.portal_mode = 'none'
 
-    def next_level(self):
-        """Avança para a próxima fase ou termina o jogo."""
-        self.current_level += 1
-        if self.current_level < len(self.levels):
-            self.reset_game()
-        else:
-            self.state = "game_over"
-
     def reset_game(self):
-        """Reseta o estado do jogo para recomeçar ou avançar para a próxima fase."""
+        """Reseta o estado do jogo para recomeçar."""
         self.projectile = Projectile((50, self.height - 50), self.width, self.height, size=50)
-        self.portal = Portal()
-        self.portal_mode = 'entry'
-        self.goal = Goal((700, 100))
-        self.obstacles = self.levels[self.current_level]  # Carregar obstáculos para a fase atual
+        self.reset_portals()  # Reinicia os portais ao resetar o jogo
+        self.goal = Goal((1250, 100))
         self.projectiles_remaining = self.max_projectiles
+        self.state = "start"
+    
+    def reset_portals(self):
+        """Redefine a criação de portais."""
+        self.portal = Portal()  # Cria uma nova instância para resetar os portais
+        self.portal_mode = 'entry'

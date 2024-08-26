@@ -52,7 +52,7 @@ class Portal:
                 # Teletransporta do azul para o laranja
                 offset_x = projectile.pos[0] - self.entry_pos[0]
                 offset_y = projectile.pos[1] - self.entry_pos[1]
-                projectile.pos = [self.exit_pos[0] + offset_x, self.exit_pos[1] + offset_y + self.radius + 1]  # Move o projétil para fora do raio de colisão
+                projectile.pos = [self.exit_pos[0] + offset_x, self.exit_pos[1] + offset_y + self.radius + 1]
                 projectile.velocity[1] = abs(projectile.velocity[1])  # Sair descendo
                 self.cooldown = 10  # Impede a colisão imediata após o teletransporte
 
@@ -60,7 +60,7 @@ class Portal:
                 # Teletransporta do laranja para o azul
                 offset_x = projectile.pos[0] - self.exit_pos[0]
                 offset_y = projectile.pos[1] - self.exit_pos[1]
-                projectile.pos = [self.entry_pos[0] + offset_x, self.entry_pos[1] + offset_y + self.radius + 1]  # Move o projétil para fora do raio de colisão
+                projectile.pos = [self.entry_pos[0] + offset_x, self.entry_pos[1] + offset_y + self.radius + 1]
                 projectile.velocity[1] = abs(projectile.velocity[1])  # Sair descendo
                 self.cooldown = 10  # Impede a colisão imediata após o teletransporte
 

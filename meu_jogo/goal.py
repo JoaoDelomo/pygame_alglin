@@ -1,13 +1,15 @@
 import pygame
 
 class Goal:
-    def __init__(self, pos, size=20):
+    def __init__(self, pos, size=100):
         self.pos = pos  # Posição do objetivo (canto superior esquerdo)
         self.size = size  # Tamanho do quadrado do objetivo
+        self.image = pygame.image.load("images/casa_do_vizinho.png")  # Carrega a imagem
+        self.image = pygame.transform.scale(self.image, (size, size))  # Ajusta o tamanho da imagem ao tamanho do objetivo
 
     def draw(self, screen):
         """Desenha o objetivo na tela."""
-        pygame.draw.rect(screen, (0, 255, 0), (*self.pos, self.size, self.size))  # Verde
+        screen.blit(self.image, self.pos)  # Desenha a imagem na tela na posição especificada
 
     def check_collision(self, projectile):
         """Verifica se o projétil colidiu com o objetivo."""

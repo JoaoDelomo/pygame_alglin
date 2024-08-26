@@ -14,15 +14,15 @@ setup(
         ]
     },
     author='Carlos Hernani e João Delomo',
-    author_email='carloshcdpg@al.insper.edu.br'+ "joaodelomo@al.insper.edu.br",
-    description='Um jogo divertido feito com Pygame.',
+    author_email='joaogrd@al.insper.edu.br, carloshcdpg@al.insper.edu.br',
+    description='Jaca Wars em pygame.',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/JoaoDelomo/pygame_alglin',  # Substitua pelo link do seu repositório
+    url='https://github.com/JoaoDelomo/pygame_alglin',  
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.7',
+    python_requires='>=3.11.4',
 )

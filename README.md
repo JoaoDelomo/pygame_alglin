@@ -1,6 +1,9 @@
 # Jaca Wars
 
 Transcrição do clássico jaca wars para pygame.
+Grupo:
+Carlos Hernani Cardoso
+João Gabriel Delomo
 
 ## Instalação
 
