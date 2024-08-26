@@ -1,15 +1,16 @@
 import pygame
+import os
 
 class Obstacle:
     def __init__(self, pos, size, speed=2):
         self.pos = list(pos)
         self.size = list(size)
-        self.speed = speed  # Velocidade vertical do obstáculo
-        self.health = 3  # Cada obstáculo tem 3 pontos de vida
+        self.speed = speed
+        self.health = 3
 
-        # Carregar a imagem do obstáculo
-        self.image = pygame.image.load("images/caixa.png").convert_alpha()  # Usar convert_alpha para suportar transparência
-        self.image = pygame.transform.scale(self.image, self.size)  # Redimensionar a imagem para o tamanho do obstáculo
+        caminho = os.path.join(os.path.dirname(__file__), 'images', 'caixa.png')
+        self.image = pygame.image.load(caminho).convert_alpha()
+        self.image = pygame.transform.scale(self.image, self.size)
 
     def draw(self, screen):
         # Calcular a transparência baseada na vida restante

@@ -1,19 +1,20 @@
 import pygame
+import os
 
 class Portal:
     def __init__(self):
-        self.entry_pos = None  # Posição do portal de entrada (azul)
-        self.exit_pos = None  # Posição do portal de saída (laranja)
-        self.radius = 20  # Raio visual do portal
-        self.entry_placed = False  # Indicador se o portal de entrada foi colocado
-        self.exit_placed = False  # Indicador se o portal de saída foi colocado
-        self.cooldown = 0  # Tempo de cooldown para evitar teletransporte repetido
+        self.entry_pos = None
+        self.exit_pos = None
+        self.radius = 20
+        self.entry_placed = False
+        self.exit_placed = False
+        self.cooldown = 0
 
-        # Carregar as imagens dos portais
-        self.entry_image = pygame.image.load('images/portal_azul.png')
-        self.exit_image = pygame.image.load('images/portal_laranja.png')
+        caminho_entrada = os.path.join(os.path.dirname(__file__), 'images', 'portal_azul.png')
+        caminho_saida = os.path.join(os.path.dirname(__file__), 'images', 'portal_laranja.png')
+        self.entry_image = pygame.image.load(caminho_entrada)
+        self.exit_image = pygame.image.load(caminho_saida)
 
-        # Ajustar o tamanho das imagens para corresponder ao raio definido
         self.entry_image = pygame.transform.scale(self.entry_image, (self.radius * 2, self.radius * 2))
         self.exit_image = pygame.transform.scale(self.exit_image, (self.radius * 2, self.radius * 2))
 

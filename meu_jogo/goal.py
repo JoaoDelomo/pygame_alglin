@@ -1,11 +1,13 @@
 import pygame
+import os
 
 class Goal:
     def __init__(self, pos, size=100):
-        self.pos = pos  # Posição do objetivo (canto superior esquerdo)
-        self.size = size  # Tamanho do quadrado do objetivo
-        self.image = pygame.image.load("images/casa_do_vizinho.png")  # Carrega a imagem
-        self.image = pygame.transform.scale(self.image, (size, size))  # Ajusta o tamanho da imagem ao tamanho do objetivo
+        self.pos = pos
+        self.size = size
+        caminho = os.path.join(os.path.dirname(__file__), 'images', 'casa_do_vizinho.png')
+        self.image = pygame.image.load(caminho)
+        self.image = pygame.transform.scale(self.image, (size, size))
 
     def draw(self, screen):
         """Desenha o objetivo na tela."""

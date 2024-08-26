@@ -128,7 +128,7 @@ class Game:
         instructions = [
             "Instruções:",
             "1. Use o mouse para mirar e definir a força.",
-            "2. Pressione espaço para colocar um portal.",
+            "2. Pressione espaço para colocar o primeiro portal e depois para adicionar o segundo.",
             "3. Cuidado com os obstáculos!",
             "4. Você não pode colocar portais depois do centro gravitacional",
             "5. Alcance a casa do vizinho para ganhar.",

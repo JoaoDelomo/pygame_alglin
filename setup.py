@@ -10,7 +10,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'meu_jogo=meu_jogo.__main__:main'
+            'jaca_wars=meu_jogo.__main__:main'
         ]
     },
     package_data={
