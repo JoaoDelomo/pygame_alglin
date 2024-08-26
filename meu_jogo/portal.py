@@ -10,8 +10,8 @@ class Portal:
         self.exit_placed = False
         self.cooldown = 0
 
-        caminho_entrada = os.path.join(os.path.dirname(__file__), 'images', 'portal_azul.png')
-        caminho_saida = os.path.join(os.path.dirname(__file__), 'images', 'portal_laranja.png')
+        caminho_entrada = os.path.join(os.path.dirname(__file__), 'images/portal_azul.png')
+        caminho_saida = os.path.join(os.path.dirname(__file__), 'images/portal_laranja.png')
         self.entry_image = pygame.image.load(caminho_entrada)
         self.exit_image = pygame.image.load(caminho_saida)
 

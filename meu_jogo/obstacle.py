@@ -8,7 +8,7 @@ class Obstacle:
         self.speed = speed
         self.health = 3
 
-        caminho = os.path.join(os.path.dirname(__file__), 'images', 'caixa.png')
+        caminho = os.path.join(os.path.dirname(__file__), 'images/caixa.png')
         self.image = pygame.image.load(caminho).convert_alpha()
         self.image = pygame.transform.scale(self.image, self.size)
 

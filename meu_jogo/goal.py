@@ -5,7 +5,7 @@ class Goal:
     def __init__(self, pos, size=100):
         self.pos = pos
         self.size = size
-        caminho = os.path.join(os.path.dirname(__file__), 'images', 'casa_do_vizinho.png')
+        caminho = os.path.join(os.path.dirname(__file__), 'images/casa_do_vizinho.png')
         self.image = pygame.image.load(caminho)
         self.image = pygame.transform.scale(self.image, (size, size))
 
