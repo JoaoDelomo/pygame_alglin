@@ -11,6 +11,15 @@ from meu_jogo.goal import Goal
 class Game:
     def __init__(self):
         pygame.init()
+        
+        # Inicializar o mixer de som
+        pygame.mixer.init()
+
+        # Carregar e reproduzir a música de fundo
+        caminho_musica = os.path.join(os.path.dirname(__file__), 'musica/musica.mp3')
+        pygame.mixer.music.load(caminho_musica)
+        pygame.mixer.music.play(-1)  # O argumento -1 faz com que a música toque em loop
+
         self.screen_info = pygame.display.Info()
         self.width = self.screen_info.current_w
         self.height = self.screen_info.current_h
@@ -18,7 +27,7 @@ class Game:
         self.close_button = CloseButton(self.screen, self.width, self.height)
 
         # Carregar a imagem do background com caminho correto
-        caminho = os.path.join(os.path.dirname(__file__), 'meu_jogo/images/background.png')
+        caminho = os.path.join(os.path.dirname(__file__), 'images/background.png')
         self.background = pygame.image.load(caminho).convert()
         self.background = pygame.transform.scale(self.background, (self.width, self.height))
 

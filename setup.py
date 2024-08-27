@@ -14,7 +14,7 @@ setup(
         ]
     },
     package_data={
-        'meu_jogo': ['meu_jogo/images/*.png',]
+        'meu_jogo': ['images/*.png',]
         },
     author='Carlos Hernani e João Delomo',
     author_email='joaogrd@al.insper.edu.br, carloshcdpg@al.insper.edu.br',

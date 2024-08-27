@@ -1,6 +1,8 @@
 # Jaca Wars
 
-Transcrição do clássico jaca wars para pygame.
+Uma guerra de jacas se inicia entre vizinhos e você terá que lançar sua mini jaca até que ela acerte a casa do seu vizinho
+Obs: tome cuidado com os obstáculos no caminho
+
 Grupo:
 Carlos Hernani Cardoso
 João Gabriel Delomo
@@ -28,5 +30,8 @@ python -m meu_jogo
 ##Como Jogar
 Use o mouse para mirar e definir a força.
 Pressione Espaço para colocar um portal.
-Alcance o quadrado verde para ganhar.
+Alcance a casa do vizinho para ganhar.
 Pressione Enter para iniciar ou avançar nos menus.
+
+##OBS:
+A musica é autoral nós dois fizemos
