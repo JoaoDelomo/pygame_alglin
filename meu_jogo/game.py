@@ -12,6 +12,8 @@ class Game:
     def __init__(self):
         pygame.init()
 
+ 
+
         self.screen_info = pygame.display.Info()
         self.width = self.screen_info.current_w
         self.height = self.screen_info.current_h

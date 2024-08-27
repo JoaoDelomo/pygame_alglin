@@ -15,13 +15,13 @@ Certifique-se de ter o Python instalado em sua máquina. Recomendamos o Python 3
 
 ```bash
 git clone https://github.com/JoaoDelomo/pygame_alglin.git
-cd meu_jogo
+
 
 
 2. Instale as dependências:
 
 pip install -r requirements.txt
-
+cd meu_jogo
 
 3. Execute o jogo:
 
