@@ -5,7 +5,7 @@ setup(
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
-    install_requires=[  # Instala as dependências especificadas no requirements.txt
+    install_requires=[ 
         line.strip() for line in open("requirements.txt").readlines()
     ],
     entry_points={
@@ -14,7 +14,7 @@ setup(
         ]
     },
     package_data={
-        'meu_jogo': ['images/*.png',]
+        'meu_jogo': ['meu_jogo/images/*.png',]
         },
     author='Carlos Hernani e João Delomo',
     author_email='joaogrd@al.insper.edu.br, carloshcdpg@al.insper.edu.br',
