@@ -18,7 +18,7 @@ class Game:
         self.close_button = CloseButton(self.screen, self.width, self.height)
 
         # Carregar a imagem do background com caminho correto
-        caminho = os.path.join(os.path.dirname(__file__), 'images', 'background.png')
+        caminho = os.path.join(os.path.dirname(__file__), 'meu_jogo/images/background.png')
         self.background = pygame.image.load(caminho).convert()
         self.background = pygame.transform.scale(self.background, (self.width, self.height))
 
